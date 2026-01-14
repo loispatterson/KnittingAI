@@ -4,9 +4,10 @@ import numpy as np
 import os
 import cv2
 import glob
-import matplotlib.pyplot as plt
-import plot_pattern as grid
+#import matplotlib.pyplot as plt
+#import plot_pattern as grid
 from matplotlib.colors import to_hex
+from predict import predict_knit_pattern
 import json
 
 IMG_SIZE = 128
@@ -197,40 +198,10 @@ history = model.fit(X_train, y_train, validation_data=(X_val, y_val), epochs=15,
 
 # Predict example
 # Predict one example
-# Predict one example
-pred = model.predict(X_val[:1])[0]  # shape (128,128,num_classes)
-pred_mask = np.argmax(pred, axis=-1)  # shape (128,128)
 
-plt.figure(figsize=(10,4))
+predict_knit_pattern(model, class_labels, color_map)
 
-# Input image
-plt.subplot(1,3,1)
-plt.imshow(X_val[0].astype(np.uint8))
-plt.title("Input")
+#pred = model.predict(X_val[:1])[0]  # shape (128,128,num_classes)
+#pred_mask = np.argmax(pred, axis=-1)  # shape (128,128)
 
-# Ground truth mask (already integer labels)
-plt.subplot(1,3,2)
-plt.imshow(y_val[0], cmap='tab20')   # <-- no argmax here
-plt.title("True Mask")
 
-# Predicted mask
-plt.subplot(1,3,3)
-plt.imshow(pred_mask, cmap='tab20')
-plt.title("Predicted Mask")
-
-plt.tight_layout()
-plt.show()
-
-# Symbol printout
-symbol_map = {0: " ", 1: "V", 2: "o", 3: "u", 4: "k", 5: "p", 6: "s"}  # example mapping
-for row in pred_mask:
-    print("".join(symbol_map.get(int(v), "?") for v in row))
-
-colour_map_255 = list(color_map.keys())
-colour_map_0_to_1 = list(np.divide(colour_map_255,255))
-grid.plot_knit_grid(
-    pred_mask,
-    class_colors=colour_map_0_to_1,
-    class_labels=class_labels,
-    title="Knit Pattern Segmentation"
-)
