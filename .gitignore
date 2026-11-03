@@ -1,4 +1,13 @@
 # created by virtualenv automatically
 .venv
 .idea
-data
+__pycache__/
+.DS_Store
+
+# Models are build output: regenerate with `python train.py --final`.
+*.keras
+*.h5
+
+# Images are NOT ignored. data/ was listed here once, which did nothing —
+# the files were already tracked, and .gitignore does not untrack anything.
+# See DATA.md for why that matters and what replaces them.
